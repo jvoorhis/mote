@@ -1,0 +1,6 @@
+sensors:
+  - Mem
+  - Load
+
+outputs:
+  - Stdout
