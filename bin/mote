@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+require 'yaml'
+require 'optparse'
+
+require_relative '../lib/mote/agent.rb'
+
+options = {}
+OptionParser.new do |opt|
+  opt.on('-c', '--configuration PATH',
+         'Path to configuration file') do |path|
+    options[:config_path] = path
+  end
+end.parse!
+
+if !File.exists?(options[:config_path])
+  warn "Could not find a valid config at #{options[:config_path]}."
+  exit 1
+end
+
+begin
+  config = YAML.load(File.read(options[:config_path]))
+rescue
+  warn "Could not parse config at #{options[:config_path]}."
+  exit 1
+end
+
+EM.run do
+  trap('INT')  { EM.stop }
+  trap('TERM') { EM.stop }
+
+  agent = Mote::Agent.new(config)
+  agent.run
+end
+
+# vim: ft=ruby
