@@ -35,6 +35,29 @@ module Mote
         }
       end
     end
+
+    class Disk
+      def execute
+        sigar  = Sigar.new
+        fslist = sigar.file_system_list
+        values = fslist.map do |fs|
+          dir_name = fs.dir_name
+          usage = sigar.file_system_usage(dir_name)
+          {
+            'total' => usage.total,
+            'used'  => usage.total - usage.free,
+            'avail' => usage.avail,
+            'pct'   => usage.use_percent * 100
+          }
+        end
+        {
+          'timestamp' => Time.now,
+          'sensor'    => 'disk',
+          'values'    => values
+        }
+      end
+    end
+
   end
 
   module Output
