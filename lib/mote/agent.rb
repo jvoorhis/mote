@@ -44,6 +44,8 @@ module Mote
           dir_name = fs.dir_name
           usage = sigar.file_system_usage(dir_name)
           {
+            'dev'   => fs.dev_name,
+            'dir'   => fs.dir_name,
             'total' => usage.total,
             'used'  => usage.total - usage.free,
             'avail' => usage.avail,
