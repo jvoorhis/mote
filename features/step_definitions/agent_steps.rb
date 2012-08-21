@@ -14,6 +14,7 @@ end
 
 When /^I run the agent$/ do
   EM.run do
+    EM.add_timer(1.5) { EM.stop }
     @agent.run
   end
 end
